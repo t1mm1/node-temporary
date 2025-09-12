@@ -8,9 +8,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
 use Drupal\node_temporary\NodeTemporaryHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -28,6 +28,7 @@ class FormAlter {
     private ConfigFactoryInterface $configFactory,
     private RequestStack $requestStack,
     private MessengerInterface $messenger,
+    private AccountInterface $currentUser,
     private NodeTemporaryHelper $nodeTemporaryHelper,
   ) {
   }
@@ -83,9 +84,14 @@ class FormAlter {
       $description = $this->nodeTemporaryHelper->getMessage($node);
     }
     else {
-      $description = $this->t('You can mark current node as temporary content that will be removed via cron in @expire_days days.<br /><br />To change the default settings go to @settings_link.', [
+      $description = $this->t('You can mark current node as temporary content that will be removed via cron in @expire_days days.', [
         '@expire_days' => $bundles[$node->bundle()]['expire_days'],
         '@node_type' => $node->bundle(),
+      ]);
+    }
+
+    if ($this->currentUser->hasPermission('administer site configuration')) {
+      $description .= '<br /><br />' . $this->t('To change the default settings go to @settings_link.', [
         '@settings_link' => Link::fromTextAndUrl(t('settings page'), Url::fromRoute('node_temporary.settings', [], [
           'attributes' => [
             'target' => '_blank',
