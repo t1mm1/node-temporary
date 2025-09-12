@@ -1,0 +1,19 @@
+node_temporary.settings:
+  type: config_object
+  label: 'Node Temporary settings'
+  mapping:
+    enabled:
+      type: integer
+      label: 'Enabled node temporary service'
+    bundles:
+      type: sequence
+      label: 'Bundle type'
+      sequence:
+        type: mapping
+        mapping:
+          bundle:
+            type: string
+            label: 'Bundle name'
+          expire_days:
+            type: integer
+            label: 'Number of days for this bundle'

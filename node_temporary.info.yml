@@ -1,0 +1,10 @@
+name: Node temporary
+type: module
+description: 'Provides ability to mark node content as temporary with autoremove.'
+core_version_requirement: ^11
+configure: node_temporary.settings
+package: Custom
+dependencies:
+  - drupal:field
+  - drupal:node
+  - drupal:user

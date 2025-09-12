@@ -1,0 +1,9 @@
+node_temporary.settings:
+  path: '/admin/config/content/node-temporary'
+  defaults:
+    _form: '\Drupal\node_temporary\Form\SettingsForm'
+    _title: 'Node temporary settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

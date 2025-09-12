@@ -1,0 +1,13 @@
+entity.node_temporary.collection:
+  title: 'Node temporary '
+  parent: system.admin_structure
+  description: 'Temporary list of nodes.'
+  route_name: entity.node_temporary.collection
+  weight: -999
+
+node_temporary.settings:
+  title: 'Node temporary settings'
+  route_name: node_temporary.settings
+  description: 'Administer node temporary settings.'
+  parent: system.admin_config_content
+  weight: 99

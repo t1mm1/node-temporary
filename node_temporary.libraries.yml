@@ -1,0 +1,8 @@
+temporary:
+  version: 1.0.0
+  js:
+    js/temporary.js:
+      attributes: { defer: true }
+  dependencies:
+    - core/drupal
+    - core/drupalSettings

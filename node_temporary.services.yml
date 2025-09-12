@@ -1,0 +1,13 @@
+services:
+  node_temporary.helper:
+    class: Drupal\node_temporary\NodeTemporaryHelper
+    arguments:
+      - '@entity_type.manager'
+      - '@messenger'
+      - '@current_user'
+      - '@request_stack'
+      - '@config.factory'
+    public: true
+
+  Drupal\node_temporary\NodeTemporaryHelper:
+    alias: 'node_temporary.helper'
