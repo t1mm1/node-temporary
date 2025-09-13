@@ -8,6 +8,15 @@ services:
       - '@request_stack'
       - '@config.factory'
     public: true
+  node_temporary.queue:
+    class: Drupal\node_temporary\NodeTemporaryQueue
+    arguments:
+      - '@entity_type.manager'
+      - '@queue'
+      - '@datetime.time'
+    public: true
 
   Drupal\node_temporary\NodeTemporaryHelper:
     alias: 'node_temporary.helper'
+  Drupal\node_temporary\NodeTemporaryQueue:
+    alias: 'node_temporary.queue'

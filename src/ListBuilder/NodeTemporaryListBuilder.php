@@ -66,7 +66,7 @@ class NodeTemporaryListBuilder extends EntityListBuilder {
   }
 
   /**
-   * Help function for getting lock owner profile link.
+   * Help function for getting owner profile link.
    *
    * @param EntityInterface $entity
    *   The item list entity.

@@ -73,15 +73,15 @@ class NodeTemporaryHelper {
    *
    * @var NodeInterface $node
    *   The node entity.
-   * @var bool $temporary
+   * @var bool $selected
    *    The checkbox value.
    * @var bool $update
    *    The update date value.
    */
-  public function handleTemporaryEntity(NodeInterface $node, bool $temporary, bool $update = FALSE): void {
-    $entity = $this->getTemporaryEntity($node);
+  public function handleTemporaryEntity(NodeInterface $node, bool $selected, bool $update = FALSE): void {
+    $temporary = $this->getTemporaryEntity($node);
 
-    if ($temporary) {
+    if ($selected) {
       $format = 'Y-m-d\TH:i:s';
       $expire = new DateTime();
       $bundles = $this->getSettingsBundles();
@@ -89,23 +89,24 @@ class NodeTemporaryHelper {
       $expire->modify('+' . $expire_days . ' days');
 
       // Update expire date.
-      if ($entity && $update) {
-        $entity->set('date_expire', $expire->format($format));
-        $entity->save();
+      if ($temporary && $update) {
+        $temporary->set('date_expire', $expire->format($format));
+        $temporary->save();
       }
 
       // Create new node temporary entity.
-      if (!$entity) {
-        $entity = NodeTemporaryEntity::create([
+      if (!$temporary) {
+        $temporary = NodeTemporaryEntity::create([
           'parent' => $node->id(),
           'date_expire' => $expire->format($format),
         ]);
-        $entity->save();
+        $temporary->save();
       }
     }
     else {
-      if ($entity) {
-        $entity->delete();
+      // Remove temporary entity if selected was unchecked.
+      if ($temporary) {
+        $temporary->delete();
       }
     }
   }

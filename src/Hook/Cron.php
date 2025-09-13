@@ -2,12 +2,9 @@
 
 namespace Drupal\node_temporary\Hook;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\node_temporary\NodeTemporaryHelper;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\node_temporary\NodeTemporaryQueue;
 
 /**
  * Generic cron hook implementation for the Node Temporary module.
@@ -20,10 +17,7 @@ class Cron {
    * {@inheritdoc}
    */
   public function __construct(
-    private ConfigFactoryInterface $configFactory,
-    private RequestStack $requestStack,
-    private MessengerInterface $messenger,
-    private NodeTemporaryHelper $nodeTemporaryHelper,
+    private NodeTemporaryQueue $nodeTemporaryQueue,
   ) {
   }
 
@@ -32,10 +26,7 @@ class Cron {
    */
   #[Hook('cron')]
   public function cron(): void {
-    // TODO: Unpublish by cron.
-    // If date > expire.
-    // TODO: remove by cron.
-    // If date  expire + 15 days.
+    $this->nodeTemporaryQueue->queueExpiredNodes();
   }
 
 }

@@ -115,7 +115,7 @@ class FormAlter {
       '#open' => $temporary ? 1 : 0,
     ];
 
-    $form['node_temporary_options']['temporary'] = [
+    $form['node_temporary_options']['selected'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Set as temporary'),
       '#description' => $this->t('Set this node as temporary.'),
@@ -133,7 +133,7 @@ class FormAlter {
       '#default_value' => 0,
       '#states' => [
         'visible' => [
-          ':input[name="temporary"]' => ['checked' => TRUE],
+          ':input[name="selected"]' => ['checked' => TRUE],
         ],
       ],
       '#disabled' => $temporary ? 0 : 1,
@@ -152,7 +152,7 @@ class FormAlter {
   public static function nodeTemporaryFormSubmit(array $form, FormStateInterface $form_state): void {
     \Drupal::service('node_temporary.helper')->handleTemporaryEntity(
       $form_state->getFormObject()->getEntity(),
-      $form_state->getValue('temporary'),
+      $form_state->getValue('selected'),
       $form_state->getValue('update'),
     );
   }

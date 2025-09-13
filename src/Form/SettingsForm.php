@@ -119,7 +119,7 @@ class SettingsForm extends ConfigFormBase {
         $form['bundles'][$bundle->id()]['expire_days'] = [
           '#type' => 'number',
           '#title' => $this->t('Expire days'),
-          '#min' => 2,
+          '#min' => 1,
           '#default_value' => $expire_default,
           '#description' => $this->t('Specify how many days after creation the "%type" content will be deleted.', ['%type' => $bundle->label()]),
           '#states' => [
