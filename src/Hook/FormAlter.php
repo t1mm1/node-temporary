@@ -136,7 +136,7 @@ class FormAlter {
           ':input[name="selected"]' => ['checked' => TRUE],
         ],
       ],
-      '#disabled' => $temporary ? 0 : 1,
+      '#disabled' => $temporary && empty($form['#disabled']) ? 0 : 1,
     ];
 
     foreach (array_keys($form['actions']) as $action) {
