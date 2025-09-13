@@ -4,7 +4,6 @@ namespace Drupal\node_temporary;
 
 use DateTime;
 use DateTimeZone;
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 
@@ -24,21 +23,14 @@ class NodeTemporaryQueue {
   protected QueueFactory $queue;
 
   /**
-   * @var TimeInterface
-   */
-  protected TimeInterface $time;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     QueueFactory $queue,
-    TimeInterface $time,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->queue = $queue;
-    $this->time = $time;
   }
 
   /**

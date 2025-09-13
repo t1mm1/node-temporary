@@ -13,7 +13,6 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@queue'
-      - '@datetime.time'
     public: true
 
   Drupal\node_temporary\NodeTemporaryHelper:
