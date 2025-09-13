@@ -5,6 +5,7 @@ namespace Drupal\node_temporary\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Markup;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\node_temporary\NodeTemporaryHelper;
 
 /**
@@ -13,7 +14,8 @@ use Drupal\node_temporary\NodeTemporaryHelper;
 class Views {
 
   public function __construct(
-    private NodeTemporaryHelper $helper,
+    private RendererInterface $renderer,
+    private NodeTemporaryHelper $nodeTemporaryHelper,
   ) {
   }
 
@@ -24,11 +26,23 @@ class Views {
   public function entityDelete(&$variables): void {
     if ($variables['field']->field == 'title') {
       if (!empty($variables['row']->_entity) && $variables['row']->_entity instanceof NodeInterface) {
-        $entity = $variables['row']->_entity;
+        $node = $variables['row']->_entity;
 
-        if ($this->helper->getTemporaryEntity($entity)) {
+        if ($this->nodeTemporaryHelper->getTemporaryEntity($node)) {
+          $content = [
+            '#theme' => 'node_temporary_icon',
+            '#output' => $variables['output'],
+            '#title' => Markup::create(
+              $this->nodeTemporaryHelper->getMessage($node, TRUE)
+            ),
+            '#cache' => [
+              'tags' => $node->getCacheTags(),
+              'max-age' => $node->getCacheMaxAge(),
+            ],
+          ];
+
           $variables['#attached']['library'][] = 'node_temporary/icon';
-          $variables['output'] = Markup::create($variables['output'] . '<i class="icon-temporary"></i>');
+          $variables['output'] = $this->renderer->render($content);
         }
       }
 

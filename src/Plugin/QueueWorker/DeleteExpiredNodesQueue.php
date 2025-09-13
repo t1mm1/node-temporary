@@ -20,11 +20,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The Entity Type Manager service.
+   *
    * @var EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * The Logger service.
+   *
    * @var LoggerChannelFactoryInterface
    */
   protected LoggerChannelFactoryInterface $logger;
@@ -78,7 +82,6 @@ class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactor
       return;
     }
 
-    // Check and remove parent node of temporary entity.
     $parent = $temporary->get('parent');
     if (!$parent->isEmpty() && $parent->entity) {
       $node = $parent->entity;
@@ -90,7 +93,6 @@ class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactor
       ]);
     }
 
-    // Remove basic temporary entity.
     $temporary->delete();
   }
 

@@ -18,12 +18,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class NodeTemporaryHelper {
 
   /**
+   * The Entity Type Manager service.
+   *
    * @var EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * The usage url service.
+   * The messager service.
    *
    * @var MessengerInterface
    */
@@ -49,7 +51,7 @@ class NodeTemporaryHelper {
    * @var ConfigFactoryInterface
    *   The config service.
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * {@inheritdoc}
@@ -71,11 +73,11 @@ class NodeTemporaryHelper {
   /**
    * Handle creation/update/remove of NodeTemporaryEntity.
    *
-   * @var NodeInterface $node
+   * @param NodeInterface $node
    *   The node entity.
-   * @var bool $selected
+   * @param bool $selected
    *    The checkbox value.
-   * @var bool $update
+   * @param bool $update
    *    The update date value.
    */
   public function handleTemporaryEntity(NodeInterface $node, bool $selected, bool $update = FALSE): void {
@@ -114,8 +116,9 @@ class NodeTemporaryHelper {
   /**
    * Get NodeTemporaryEntity by node.
    *
-   * @var NodeInterface $node
+   * @param NodeInterface $node
    *   The node entity.
+   *
    * @return NodeTemporaryEntity|NULL
    *   Node Temporary entity or null.
    */
@@ -141,9 +144,9 @@ class NodeTemporaryHelper {
   /**
    * Help function show message.
    *
-   * @var NodeInterface $node
+   * @param NodeInterface $node
    *   The processing node.
-   * @var bool|null $is_processing_input
+   * @param bool|null $is_processing_input
    *   The form state processing.
    */
   public function setMessage(NodeInterface $node, ?bool $is_processing_input): void {
@@ -162,12 +165,15 @@ class NodeTemporaryHelper {
   /**
    * Help function to get message text.
    *
-   * @var NodeInterface $node
+   * @param NodeInterface $node
    *   The processing node.
+   * @param bool $clean
+   *   The flag for clean message.
+   *
    * @return string|false
    *   The message text.
    */
-  public function getMessage(NodeInterface $node): string|false {
+  public function getMessage(NodeInterface $node, bool $clean = FALSE): string|false {
     $temporary = $this->getTemporaryEntity($node);
 
     if (empty($temporary)) {
@@ -175,22 +181,29 @@ class NodeTemporaryHelper {
     }
 
     if ($this->isOwner($temporary)) {
-      return t('You have marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
+      $message = t('You have marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
         '@date' => $temporary->getFormattedExpire(),
       ]);
     }
     else {
-      return t('@user has marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
+      $message = t('@user has marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
         '@user' => $temporary->getUser()->getAccountName(),
         '@date' => $temporary->getFormattedExpire(),
       ]);
     }
+
+    if ($clean) {
+      $message = str_replace('<br />', '&nbsp;', $message);
+      $message = strip_tags($message);
+    }
+
+    return $message;
   }
 
   /**
    * Help function for check is user owner or not.
    *
-   * @var NodeTemporaryEntity $node
+   * @param NodeTemporaryEntity $temporary
    *   The processing node.
    */
   public function isOwner(NodeTemporaryEntity $temporary): bool {
@@ -218,6 +231,9 @@ class NodeTemporaryHelper {
 
   /**
    * Help function for getting flag is bundle enable or not.
+   *
+   * @param string $bundle
+   *   The bundle name.
    *
    * @return bool
    *   The flag is service enable or not (with node bundle checking).

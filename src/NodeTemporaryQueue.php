@@ -13,11 +13,15 @@ use Drupal\Core\Queue\QueueFactory;
 class NodeTemporaryQueue {
 
   /**
+   * The Entity Type Manager service.
+   *
    * @var EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * The Queue Factory service.
+   *
    * @var QueueFactory
    */
   protected QueueFactory $queue;
