@@ -6,3 +6,9 @@ temporary:
   dependencies:
     - core/drupal
     - core/drupalSettings
+
+icon:
+  version: 1.0.0
+  css:
+    component:
+      css/temporary.icon.css: { }

@@ -1,0 +1,9 @@
+.icon-temporary {
+  background: url(../images/icon-temporary.png) no-repeat center top;
+  background-size: cover;
+
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  margin-left: 0.3rem;
+}
