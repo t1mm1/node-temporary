@@ -28,7 +28,7 @@ class Views {
 
         if ($this->helper->getTemporaryEntity($entity)) {
           $variables['#attached']['library'][] = 'node_temporary/icon';
-          $variables['output'] = Markup::create($variables['output'] . '<i class="icon-temporary" style="color: orange"></i>');
+          $variables['output'] = Markup::create($variables['output'] . '<i class="icon-temporary"></i>');
         }
       }
 
