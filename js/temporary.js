@@ -22,6 +22,22 @@
             .each(function () {
               values.push(Drupal.checkPlain(this.textContent.trim()));
             });
+
+          $optionsContext
+            .find('input[type=date]')
+            .each(function () {
+              const val = this.value;
+              Drupal.checkPlain(val);
+              if (val) {
+                const dateObj = new Date(val);
+                const formatted = dateObj.toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                });
+                values.push(formatted);
+              }
+            });
           return values.join(', ');
         }
 

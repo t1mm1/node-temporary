@@ -2,6 +2,8 @@
 
 namespace Drupal\node_temporary\Hook;
 
+use DateTime;
+use DateTimeZone;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -84,25 +86,15 @@ class FormAlter {
       $description = $this->nodeTemporaryHelper->getMessage($node);
     }
     else {
-      $description = $this->t('You can mark current node as temporary content that will be removed via cron in @expire_days days.', [
-        '@expire_days' => $bundles[$node->bundle()]['expire_days'],
-        '@node_type' => $node->bundle(),
-      ]);
-    }
-
-    if ($this->currentUser->hasPermission('administer site configuration')) {
-      $description .= '<br /><br />' . $this->t('To change the default settings go to @settings_link.', [
-        '@settings_link' => Link::fromTextAndUrl(t('settings page'), Url::fromRoute('node_temporary.settings', [], [
-          'attributes' => [
-            'target' => '_blank',
-          ],
-        ]))->toString(),
+      $description = $this->t('You can mark current node as temporary content that will unpublished and removed via cron in @number @days from today.', [
+        '@number' => $bundles[$node->bundle()]['expire_days'],
+        '@days' => $bundles[$node->bundle()]['expire_days'] < 2 ? 'day' : 'days',
       ]);
     }
 
     $form['node_temporary_options'] = [
       '#type' => 'details',
-      '#title' => $this->t('Temporary node settings'),
+      '#title' => $this->t('Temporary'),
       '#description' => $description ?? '',
       '#group' => 'advanced',
       '#weight' => 20,
@@ -115,28 +107,47 @@ class FormAlter {
       '#open' => $temporary ? 1 : 0,
     ];
 
+    if ($this->currentUser->hasPermission('administer site configuration')) {
+      $form['node_temporary_options']['description'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('To change the default settings go to @settings_link.', [
+          '@settings_link' => Link::fromTextAndUrl(t('settings page'), Url::fromRoute('node_temporary.settings', [], [
+            'attributes' => [
+              'target' => '_blank',
+            ],
+          ]))->toString(),
+        ]),
+        '#attributes' => [
+          'class' => ['form-item__description'],
+        ]
+      ];
+    }
+
     $form['node_temporary_options']['selected'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Set as temporary'),
+      '#title' => $this->t('Temporary'),
       '#description' => $this->t('Set this node as temporary.'),
       '#default_value' => $temporary ? 1 : 0,
     ];
 
-    $form['node_temporary_options']['update'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Update expiration date to @expire_days days', [
-        '@expire_days' => $bundles[$node->bundle()]['expire_days'],
-      ]),
-      '#description' => $this->t('Update the expiration date to @expire_days days from today.', [
-        '@expire_days' => $bundles[$node->bundle()]['expire_days'],
-      ]),
-      '#default_value' => 0,
+    $date_value = ($temporary && !$temporary->get('date_expire')->isEmpty()) ?
+      $temporary->get('date_expire')->value :
+      (new DateTime('now', new DateTimeZone('UTC')))
+        ->setTime(0, 0, 0)
+        ->modify('+' . $bundles[$node->bundle()]['expire_days'] . ' days')
+        ->format('Y-m-d');
+
+    $form['node_temporary_options']['date_expire'] = [
+      '#type' => 'date',
+      '#description' => $this->t('Expiration date'),
+      '#default_value' => substr($date_value, 0, 10),
+      '#disabled' => empty($form['#disabled']) ? 0 : 1,
       '#states' => [
         'visible' => [
           ':input[name="selected"]' => ['checked' => TRUE],
         ],
       ],
-      '#disabled' => $temporary && empty($form['#disabled']) ? 0 : 1,
     ];
 
     foreach (array_keys($form['actions']) as $action) {
@@ -153,7 +164,7 @@ class FormAlter {
     \Drupal::service('node_temporary.helper')->handleTemporaryEntity(
       $form_state->getFormObject()->getEntity(),
       $form_state->getValue('selected'),
-      $form_state->getValue('update'),
+      $form_state->getValue('date_expire'),
     );
   }
 

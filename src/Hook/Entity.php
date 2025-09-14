@@ -23,7 +23,7 @@ class Entity {
   #[Hook('entity_delete')]
   public function entityDelete(EntityInterface $entity): void {
     if ($entity instanceof NodeInterface) {
-      $this->helper->handleTemporaryEntity($entity, FALSE);
+      $this->helper->handleTemporaryEntity($entity);
     }
   }
 

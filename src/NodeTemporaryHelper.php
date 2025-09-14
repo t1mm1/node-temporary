@@ -78,41 +78,31 @@ class NodeTemporaryHelper {
    *   The node entity.
    * @param bool $selected
    *    The checkbox value.
-   * @param bool $update
+   * @param string $date
    *    The update date value.
    */
-  public function handleTemporaryEntity(NodeInterface $node, bool $selected, bool $update = FALSE): void {
+  public function handleTemporaryEntity(NodeInterface $node, bool $selected = FALSE, string $date = ''): void {
     $temporary = $this->getTemporaryEntity($node);
 
-    if ($selected) {
+    if ($selected && $date) {
       $format = 'Y-m-d\TH:i:s';
-      $expire = (new DateTime('now', new DateTimeZone('UTC')))
-        ->setTime(0, 0, 0);
-
-      $bundles = $this->getSettingsBundles();
-      $expire_days = $bundles[$node->getType()]['expire_days'];
-      $expire->modify('+' . $expire_days . ' days');
+      $expire = (new DateTime($date, new DateTimeZone('UTC')));
+      $expire->setTime(0, 0, 0);
 
       // Update expire date.
-      if ($temporary && $update) {
+      if ($temporary) {
         $temporary->set('date_expire', $expire->format($format));
-        $temporary->save();
       }
-
-      // Create new node temporary entity.
-      if (!$temporary) {
+      else {
         $temporary = NodeTemporaryEntity::create([
           'parent' => $node->id(),
           'date_expire' => $expire->format($format),
         ]);
-        $temporary->save();
       }
+      $temporary->save();
     }
     else {
-      // Remove temporary entity if selected was unchecked.
-      if ($temporary) {
-        $temporary->delete();
-      }
+      $temporary?->delete();
     }
   }
 
@@ -184,19 +174,18 @@ class NodeTemporaryHelper {
     }
 
     if ($this->isOwner($temporary)) {
-      $message = t('You have marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
+      $message = t('You have marked the node as temporary. It will expire on <strong>@date</strong>.', [
         '@date' => $temporary->getFormattedExpire(),
       ]);
     }
     else {
-      $message = t('@user has marked the node as temporary.<br />It will expire on <strong>@date</strong>.', [
+      $message = t('@user has marked the node as temporary. It will expire on <strong>@date</strong>.', [
         '@user' => $temporary->getUser()->getAccountName(),
         '@date' => $temporary->getFormattedExpire(),
       ]);
     }
 
     if ($clean) {
-      $message = str_replace('<br />', '&nbsp;', $message);
       $message = strip_tags($message);
     }
 

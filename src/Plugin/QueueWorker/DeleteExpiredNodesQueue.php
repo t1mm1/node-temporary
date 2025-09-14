@@ -87,7 +87,7 @@ class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactor
       $node = $parent->entity;
       $node->delete();
 
-      $this->logger->get('node_temporary')->notice('Delete expired node: @label (@nid)', [
+      $this->logger->get('node_temporary')->notice('Deleted expired node: @label (@nid)', [
         '@label' => $node->label(),
         '@nid' => $node->id(),
       ]);
