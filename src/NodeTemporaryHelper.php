@@ -174,12 +174,12 @@ class NodeTemporaryHelper {
     }
 
     if ($this->isOwner($temporary)) {
-      $message = t('You have marked the node as temporary. It will expire on <strong>@date</strong>.', [
+      $message = t('You have marked the node as temporary. It will automatically expire on <strong>@date</strong>.', [
         '@date' => $temporary->getFormattedExpire(),
       ]);
     }
     else {
-      $message = t('@user has marked the node as temporary. It will expire on <strong>@date</strong>.', [
+      $message = t('@user has marked the node as temporary. It will automatically expire on <strong>@date</strong>.', [
         '@user' => $temporary->getUser()->getAccountName(),
         '@date' => $temporary->getFormattedExpire(),
       ]);
