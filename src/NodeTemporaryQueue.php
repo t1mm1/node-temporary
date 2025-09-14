@@ -48,7 +48,7 @@ class NodeTemporaryQueue {
     $storage = $this->entityTypeManager->getStorage('node_temporary');
     $query = $storage->getQuery();
     $entities = $query
-      ->condition('date_expire', $now, '<')
+      ->condition('date_expire', $now, '<=')
       ->accessCheck(FALSE)
       ->execute();
 
