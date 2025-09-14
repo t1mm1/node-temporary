@@ -3,15 +3,12 @@
 namespace Drupal\node_temporary\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node_temporary\NodeTemporaryQueue;
 
 /**
  * Generic cron hook implementation for the Node Temporary module.
  */
 class Cron {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

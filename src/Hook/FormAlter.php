@@ -112,7 +112,7 @@ class FormAlter {
         '#type' => 'html_tag',
         '#tag' => 'div',
         '#value' => $this->t('To change the default settings go to @settings_link.', [
-          '@settings_link' => Link::fromTextAndUrl(t('settings page'), Url::fromRoute('node_temporary.settings', [], [
+          '@settings_link' => Link::fromTextAndUrl($this->t('settings page'), Url::fromRoute('node_temporary.settings', [], [
             'attributes' => [
               'target' => '_blank',
             ],
