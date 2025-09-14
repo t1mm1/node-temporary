@@ -3,6 +3,7 @@
 namespace Drupal\node_temporary;
 
 use DateTime;
+use DateTimeZone;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -85,7 +86,9 @@ class NodeTemporaryHelper {
 
     if ($selected) {
       $format = 'Y-m-d\TH:i:s';
-      $expire = new DateTime();
+      $expire = (new DateTime('now', new DateTimeZone('UTC')))
+        ->setTime(0, 0, 0);
+
       $bundles = $this->getSettingsBundles();
       $expire_days = $bundles[$node->getType()]['expire_days'];
       $expire->modify('+' . $expire_days . ' days');

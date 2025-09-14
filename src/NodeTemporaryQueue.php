@@ -42,6 +42,7 @@ class NodeTemporaryQueue {
    */
   public function queueExpiredNodes(): void {
     $now = (new DateTime('now', new DateTimeZone('UTC')))
+      ->setTime(0, 0, 0)
       ->format('Y-m-d\TH:i:s');
 
     $storage = $this->entityTypeManager->getStorage('node_temporary');
