@@ -24,7 +24,8 @@ class NodeTemporaryListBuilder extends EntityListBuilder {
     $header['id'] = $this->t('ID');
     $header['parent'] = $this->t('Node');
     $header['uid'] = $this->t('User');
-    $header['expire'] = $this->t('Expire');
+    $header['option'] = $this->t('Option');
+    $header['when'] = $this->t('When');
 
     return $header + parent::buildHeader();
   }
@@ -36,7 +37,8 @@ class NodeTemporaryListBuilder extends EntityListBuilder {
     $row['id'] = $entity->id();
     $row['parent'] = $this->getNodeLink($entity);
     $row['uid'] = $this->getProfileLink($entity);
-    $row['expire'] = $entity->getFormattedExpire();
+    $row['option'] = $this->getOptionValue($entity);
+    $row['when'] = $entity->getFormattedExpire();
 
     return $row + parent::buildRow($entity);
   }
@@ -84,6 +86,25 @@ class NodeTemporaryListBuilder extends EntityListBuilder {
     }
 
     return $link;
+  }
+
+  /**
+   * Help function for getting value of options.
+   *
+   * @param EntityInterface $entity
+   *   The item list entity.
+   *
+   * @return string
+   *   Bool value.
+   */
+  public function getOptionValue(EntityInterface $entity): string {
+    $value = $this->t('Unpublish');
+
+    if ($entity->get('delete')->value) {
+      $value = $this->t('Delete');
+    }
+
+    return $value;
   }
 
 }
