@@ -121,7 +121,7 @@ class SettingsForm extends ConfigFormBase {
           '#title' => $this->t('Expire days'),
           '#min' => 1,
           '#default_value' => $expire_default,
-          '#description' => $this->t('Specify how many days after creation the "%type" content will be deleted.', ['%type' => $bundle->label()]),
+          '#description' => $this->t('Specify the number of days after creation when the "%type" content should be unpublished.', ['%type' => $bundle->label()]),
           '#states' => [
             'visible' => [
               ':input[name="bundles[' . $bundle->id() . '][enabled]"]' => ['checked' => TRUE],

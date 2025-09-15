@@ -4,6 +4,6 @@ node_temporary.settings:
     _form: '\Drupal\node_temporary\Form\SettingsForm'
     _title: 'Node temporary settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer node temporary configuration'
   options:
     _admin_route: TRUE

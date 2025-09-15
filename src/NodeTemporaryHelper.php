@@ -76,26 +76,30 @@ class NodeTemporaryHelper {
    *
    * @param NodeInterface $node
    *   The node entity.
-   * @param bool $selected
+   * @param bool $select
+   *    The checkbox value.
+   * @param bool $delete
    *    The checkbox value.
    * @param string $date
    *    The update date value.
    */
-  public function handleTemporaryEntity(NodeInterface $node, bool $selected = FALSE, string $date = ''): void {
+  public function handleTemporaryEntity(NodeInterface $node, bool $select = FALSE, bool $delete = FALSE, string $date = ''): void {
     $temporary = $this->getTemporaryEntity($node);
 
-    if ($selected && $date) {
+    if ($select && $date) {
       $format = 'Y-m-d\TH:i:s';
       $expire = (new DateTime($date, new DateTimeZone('UTC')));
       $expire->setTime(0, 0, 0);
 
       // Update expire date.
       if ($temporary) {
+        $temporary->set('delete', $delete);
         $temporary->set('date_expire', $expire->format($format));
       }
       else {
         $temporary = NodeTemporaryEntity::create([
           'parent' => $node->id(),
+          'delete' => $delete,
           'date_expire' => $expire->format($format),
         ]);
       }

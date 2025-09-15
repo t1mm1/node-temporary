@@ -25,6 +25,7 @@ class Views {
   #[Hook('preprocess_views_view_field')]
   public function entityDelete(&$variables): void {
     if ($variables['field']->field == 'title') {
+      // Check entity for process.
       if (!empty($variables['row']->_entity) && $variables['row']->_entity instanceof NodeInterface) {
         $node = $variables['row']->_entity;
 

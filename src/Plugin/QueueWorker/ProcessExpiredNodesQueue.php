@@ -9,15 +9,15 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Processes expired temporary nodes and deletes them.
+ * Processes expired temporary nodes.
  *
  * @QueueWorker(
- *   id = "node_temporary_delete_expired_nodes_queue",
- *   title = @Translation("Node Temporary: Delete Expired Temporary Nodes"),
- *   cron = {"time" = 60}
+ *   id = "node_temporary_process_expired_nodes_queue",
+ *   title = @Translation("Node temporary: Process expired temporary nodes"),
+ *   cron = {"time" = 86400}
  * )
  */
-class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+class ProcessExpiredNodesQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   /**
    * The Entity Type Manager service.
@@ -85,12 +85,24 @@ class DeleteExpiredNodesQueue extends QueueWorkerBase implements ContainerFactor
     $parent = $temporary->get('parent');
     if (!$parent->isEmpty() && $parent->entity) {
       $node = $parent->entity;
-      $node->delete();
 
-      $this->logger->get('node_temporary')->notice('Deleted expired node: @label (@nid)', [
-        '@label' => $node->label(),
-        '@nid' => $node->id(),
-      ]);
+      if (!$temporary->get('delete')->isEmpty()) {
+        $node->delete();
+
+        $this->logger->get('node_temporary')->notice('Deleted expired node: @label (@nid)', [
+          '@label' => $node->label(),
+          '@nid' => $node->id(),
+        ]);
+      }
+      else {
+        $node->setUnpublished();
+        $node->save();
+
+        $this->logger->get('node_temporary')->notice('Unpublish expired node: @label (@nid)', [
+          '@label' => $node->label(),
+          '@nid' => $node->id(),
+        ]);
+      }
     }
 
     $temporary->delete();

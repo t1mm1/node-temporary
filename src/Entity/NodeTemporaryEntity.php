@@ -103,6 +103,15 @@ class NodeTemporaryEntity extends ContentEntityBase implements EntityOwnerInterf
         ],
       ]);
 
+    $fields['delete'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Delete temporary node'))
+      ->setDescription(t('A flag to delete temporary parent node.'))
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 101,
+      ]);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The created datetime.'));

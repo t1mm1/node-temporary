@@ -1,0 +1,7 @@
+access node temporary:
+  title: 'Access node temporary'
+  description: 'Give ability to access node temporary settings on node form.'
+
+administer node temporary configuration:
+  title: 'Administer node temporary configuration'
+  description: 'Give ability to configure node temporary settings.'

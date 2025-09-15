@@ -44,6 +44,7 @@ class FormAlter {
       return;
     }
 
+    // Is service enabled.
     if (!$this->nodeTemporaryHelper->isEnabled()) {
       return;
     }
@@ -70,7 +71,13 @@ class FormAlter {
       return;
     }
 
+    // Is service enabled.
     if (!$this->nodeTemporaryHelper->isEnabled()) {
+      return;
+    }
+
+    // Check user access to the service.
+    if (!$this->currentUser->hasPermission('access node temporary')) {
       return;
     }
 
@@ -107,28 +114,25 @@ class FormAlter {
       '#open' => $temporary ? 1 : 0,
     ];
 
-    if ($this->currentUser->hasPermission('administer site configuration')) {
-      $form['node_temporary_options']['description'] = [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => $this->t('To change the default settings go to @settings_link.', [
-          '@settings_link' => Link::fromTextAndUrl($this->t('settings page'), Url::fromRoute('node_temporary.settings', [], [
-            'attributes' => [
-              'target' => '_blank',
-            ],
-          ]))->toString(),
-        ]),
-        '#attributes' => [
-          'class' => ['form-item__description'],
-        ]
-      ];
-    }
-
-    $form['node_temporary_options']['selected'] = [
+    $form['node_temporary_options']['select'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Temporary'),
-      '#description' => $this->t('Set this node as temporary.'),
+      '#description' => $this->t('Automatically unpublish the node after expiration date.'),
       '#default_value' => $temporary ? 1 : 0,
+    ];
+
+    $delete_value = ($temporary && !$temporary->get('delete')->isEmpty()) ? $temporary->get('delete')->value : 0;
+    $form['node_temporary_options']['delete'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Automatically delete node'),
+      '#description' => $this->t('Automatically delete the node after expiration date.'),
+      '#default_value' => $delete_value,
+      '#disabled' => empty($form['#disabled']) ? 0 : 1,
+      '#states' => [
+        'visible' => [
+          ':input[name="select"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     $date_value = ($temporary && !$temporary->get('date_expire')->isEmpty()) ?
@@ -145,13 +149,30 @@ class FormAlter {
       '#disabled' => empty($form['#disabled']) ? 0 : 1,
       '#states' => [
         'visible' => [
-          ':input[name="selected"]' => ['checked' => TRUE],
+          ':input[name="select"]' => ['checked' => TRUE],
         ],
         'required' => [
-          ':input[name="selected"]' => ['checked' => TRUE],
+          ':input[name="select"]' => ['checked' => TRUE],
         ],
       ],
     ];
+
+    if ($this->currentUser->hasPermission('administer node temporary configuration')) {
+      $form['node_temporary_options']['description'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('To change the default settings go to @settings_link.', [
+          '@settings_link' => Link::fromTextAndUrl($this->t('settings page'), Url::fromRoute('node_temporary.settings', [], [
+            'attributes' => [
+              'target' => '_blank',
+            ],
+          ]))->toString(),
+        ]),
+        '#attributes' => [
+          'class' => ['form-item__description'],
+        ]
+      ];
+    }
 
     foreach (array_keys($form['actions']) as $action) {
       if ($action !== 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
@@ -165,7 +186,7 @@ class FormAlter {
    * Help function for validate advanced form section.
    */
   public static function validateDateExpireField(array &$form, FormStateInterface $form_state): void {
-    if ($form_state->getValue('selected')) {
+    if ($form_state->getValue('select')) {
       $date_expire = $form_state->getValue('date_expire');
       if (empty($date_expire)) {
         $form_state->setErrorByName('date_expire', t('Expiration date is required when marking node as temporary.'));
@@ -187,7 +208,8 @@ class FormAlter {
   public static function nodeTemporaryFormSubmit(array $form, FormStateInterface $form_state): void {
     \Drupal::service('node_temporary.helper')->handleTemporaryEntity(
       $form_state->getFormObject()->getEntity(),
-      $form_state->getValue('selected'),
+      $form_state->getValue('select'),
+      $form_state->getValue('delete'),
       $form_state->getValue('date_expire'),
     );
   }

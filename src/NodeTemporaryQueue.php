@@ -53,7 +53,7 @@ class NodeTemporaryQueue {
       ->execute();
 
     if (!empty($entities)) {
-      $queue = $this->queue->get('node_temporary_delete_expired_nodes_queue');
+      $queue = $this->queue->get('node_temporary_process_expired_nodes_queue');
       foreach ($entities as $id) {
         $queue->createItem(['id' => $id]);
       }
