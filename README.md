@@ -52,9 +52,13 @@ Module provide permissions *access node temporary* and *administer node temporar
 
 ### Install
 Dependencies:
+```
+dependencies:
 - drupal:field
 - drupal:node
 - drupal:user
+- drupal:queue
+```
 
 Install this module using the standard Drupal module installation process.
 
