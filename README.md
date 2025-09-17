@@ -24,7 +24,7 @@ To view all temporary nodes, go to **Structure → Temporary nodes list**:
 ```
 admin/structure/node-temporary/list
 ```
-Here you can review all marked nodes and remove them from the temporary list directly.
+On this page you can review all marked nodes and remove their "temporary" mark directly from the list.
 
 
 ### Media
