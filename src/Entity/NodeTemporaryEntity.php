@@ -52,7 +52,7 @@ class NodeTemporaryEntity extends ContentEntityBase implements EntityOwnerInterf
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
-    $fields = [];
+    $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields[$entity_type->getKey('id')] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
