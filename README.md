@@ -19,10 +19,10 @@ Enable the service and configure it for specific node types. You can adjust the 
 
 In the node form sidebar, the Temporary section allows you to choose what happens when the expiration date is reached: you can either unpublish the node or remove it completely.
 
-To view all temporary nodes, go to **Structure → Temporary nodes list**:
+To view all temporary nodes, go to **Structure → Node temporary**:
 
 ```
-admin/structure/node-temporary/list
+admin/structure/node-temporary
 ```
 On this page you can review all marked nodes and remove their "temporary" mark directly from the list.
 

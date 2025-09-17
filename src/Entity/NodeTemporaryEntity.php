@@ -37,8 +37,8 @@ use Drupal\user\UserInterface;
  *      },
  *   },
  *   links = {
- *     "delete-form" = "/admin/structure/node-temporary/list/{node_temporary}/delete",
- *     "collection" = "/admin/structure/node-temporary/list",
+ *     "delete-form" = "/admin/structure/node-temporary/{node_temporary}/delete",
+ *     "collection" = "/admin/structure/node-temporary",
  *   },
  *   admin_permission = "administer content",
  *   translatable = TRUE,
