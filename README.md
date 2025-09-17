@@ -31,19 +31,19 @@ On this page you can review all marked nodes and remove their "temporary" mark d
 
 Settings form
 
-![Settings form](assets/settings_form.png)
+<img src="assets/settings_form.png" alt="Settings form">
 
 Node edit form (advanced section)
 
-![Node edit form](assets/node_edit_form.png)
+<img src="assets/node_edit_form.png" alt="Node edit form">
 
 Node edit form, message
 
-![Node edit form](assets/message.png)
+<img src="assets/message.png" alt="Node edit form, message">
 
 Content view expiration details
 
-![Content view expiration details](assets/content_view_expiration_details.png)
+<img src="assets/content_view_expiration_details.png" alt="Content view expiration details">
 
 ### Permissions
 Module provide permissions *access node temporary* and *administer node temporary configuration*.
