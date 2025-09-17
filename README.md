@@ -30,15 +30,19 @@ Here you can review all marked nodes and remove them from the temporary list dir
 ### Media
 
 Settings form
+
 ![Settings form](assets/settings_form.png)
 
 Node edit form (advanced section)
+
 ![Node edit form](assets/node_edit_form.png)
 
 Node edit form, message
+
 ![Node edit form](assets/message.png)
 
 Content view expiration details
+
 ![Content view expiration details](assets/content_view_expiration_details.png)
 
 ### Permissions
