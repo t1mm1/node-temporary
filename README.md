@@ -57,7 +57,7 @@ dependencies:
 - drupal:field
 - drupal:node
 - drupal:user
-- drupal:queue
+- queue_ui:queue_ui
 ```
 
 Install this module using the standard Drupal module installation process.
